@@ -1,28 +1,26 @@
-const passport = require('passport');
-const keys = require("../config/keys");
 
-const mongoose = require("mongoose");
-const Proxy = mongoose.model("proxies");
-const Ticker = mongoose.model("tickers");
-const Video = mongoose.model("videos");
-const Channel = mongoose.model("channels");
-const Group = mongoose.model("groups");
-
+const _ = require("lodash");
+const request = require('request-promise');
 
 module.exports = app => {
 
-	// app.get("/refresh_data", async (req, res) => {
-	// 	// const { username } = req.body;
-	// 	return Ticker.find(
-	// 		{
-	// 			"active": { $eq: true }
-	// 		},
-	// 		async (err, result) => {
-    //             fs.writeFileSync('scraping/tickers.json', JSON.stringify(result));
-	// 			res.json(result);
-	// 		}
-	// 	);
-	// });
+	app.post("/get", async (req, res) => {
+        return new Promise((resolve, reject) => {
+            request({
+                url: "http://coolloader.herokuapp.com/"+ req.body.url,
+                timeout: "15000",
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Safari/537.36.'
+                },
+            })
+            .then((response) => {
+                res.send(response)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        });
+	});
 	
 };
 
